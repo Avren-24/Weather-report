@@ -1,129 +1,216 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class WeatherApp {
-    private List<WeatherDay> weekWeather = new ArrayList<>();
-    private WeatherDay nextMondayWeather = null;
-    private Scanner scanner = new Scanner(System.in);
+
+    WeatherStore weatherStore;
+    Scanner input = new Scanner(System.in);
 
     public static void main(String[] args) {
-        new WeatherApp().runApp();
+        WeatherApp WeatherApp = new WeatherApp();
+        WeatherApp.setup();
+        WeatherApp.clearScreen();
+        WeatherApp.runMenu();
     }
 
-    public void runApp() {
-        System.out.println("Welcome to the 7-day weather forecast system！");
-
-        // 输入7天的天气
-        for (int i = 1; i <= 7; i++) {
-            String dayName = getDayName(i);
-            System.out.print("Please enter " + dayName + "'s weather（Sunny/Windy/Rainy）：");
-            String weather = scanner.nextLine();
-            weekWeather.add(new WeatherDay(dayName, weather));
-        }
-
-        // 询问是否添加下个星期一的天气记录
-        System.out.print("Would you like to add a weather record for next Monday？（Yes/No）：");
-        String addNextMonday = scanner.nextLine();
-        if ("Yes".equals(addNextMonday)) {
-            System.out.print("The next Monday's weather will be？（Sunny/Windy/Rainy）:");
-            String nextMondayWeatherInput = scanner.nextLine();
-            nextMondayWeather = new WeatherDay("Next Monday", nextMondayWeatherInput);
-        }
-
-        // 询问是否修改这一周的天气
-        System.out.print("Do you want to modify the weather this week？（Yes/No）：");
-        String modifyWeek = scanner.nextLine();
-        if ("Yes".equals(modifyWeek)) {
-            System.out.print("Modify the weather on what day of the week？（1-7）：");
-            int dayToModify = scanner.nextInt();
-            scanner.nextLine(); // 读取换行符
-            if (dayToModify >= 1 && dayToModify <= 7) {
-                System.out.print("Which one do you want to change to(Sunny/Windy/Rainy):？");
-                String newWeather = scanner.nextLine();
-                WeatherDay originalDay = weekWeather.get(dayToModify - 1);
-                if (!originalDay.getWeather().equals(newWeather)) {
-                    originalDay.setWeather(newWeather);
-                } else {
-                    System.out.println("The weather modification is invalid！");
-                }
-            } else {
-                System.out.println("The weather modification is invalid！");
-            }
-        }
-
-        // 询问是否删除7天内的任意一天的天气记录
-        System.out.print("Do you want to delete the weather record of any day within 7 days？（Yes/No）：");
-        String deleteDay = scanner.nextLine();
-        if ("Yes".equals(deleteDay)) {
-            System.out.print("Delete the weather record of what day of the week？（1-7）：");
-            int dayToDelete = scanner.nextInt();
-            scanner.nextLine(); // 读取换行符
-            if (dayToDelete >= 1 && dayToDelete <= 7) {
-                WeatherDay dayToDeleteWeather = weekWeather.get(dayToDelete - 1);
-                dayToDeleteWeather.setWeather("unknown weather");
-            } else {
-                System.out.println("Invalid input,please enter a number from 1 to 7！");
-            }
-        }
-
-        // 输出最终的天气结果
-        System.out.println("The final weather result is：");
-        for (WeatherDay day : weekWeather) {
-            System.out.println(day);
-        }
-        if (nextMondayWeather != null) {
-            System.out.println(nextMondayWeather);
-        }
-
-        // 询问是否查询最终某一天的天气
-        System.out.print("All the additions and modifications of the weather have been completed.Do you need to check the weather of a certain day？（Yes/No）：");
-        String queryWeather = scanner.nextLine();
-        if ("Yes".equals(queryWeather)) {
-            System.out.print("Want to check the weather on which day of the week or next Monday？");
-            String dayToQuery = scanner.nextLine();
-            if ("Next Monday".equals(dayToQuery)) {
-                if (nextMondayWeather != null) {
-                    System.out.println(nextMondayWeather);
-                } else {
-                    System.out.println("There is no weather record for next Monday！");
-                }
-            } else {
-                int queryDay = parseDayToNumber(dayToQuery);
-                if (queryDay != -1 && queryDay <= weekWeather.size()) {
-                    System.out.println(weekWeather.get(queryDay - 1));
-                } else {
-                    System.out.println("Invalid input,please enter a valid number！");
-                }
-            }
-        }
-
-        System.out.println("Thank you for using our weather forecast system！");
+    private int displayMenu() {
+        clearScreen(); // Only works at console
+        System.out.println("/////////////////////////");
+        System.out.print("""
+               Weather Forecast Menu
+               ---------------------
+                  1) List All Weather Forecasts
+                  2) Add a Weather Forecast
+                  3) Search for Weather Forecast (Region and Date)
+                  4) Get Behavioral Advice
+                  5) Update Weather Condition
+                  6) Update Temperature
+                  0) Exit
+               ==>>""");
+        int option = input.nextInt();
+        System.out.println("/////////////////////////");
+        return option;
     }
 
-    private String getDayName(int day) {
-        String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-        return days[day - 1];
+    private void runMenu() {
+        int option = displayMenu();
+
+        while (option != 0) {
+            switch (option) {
+                case 1 -> printWeatherForecasts();
+                case 2 -> addWeatherForecast();
+                case 3 -> findWeatherForecast();
+                case 4 -> getAdvice();
+                case 5 -> updateCondition();
+                case 6 -> updateTemperature();
+                case -88 -> dummyData();
+                default -> System.out.println("Invalid option entered: " + option);
+            }
+
+            // Pause the program so that the user can read what we just printed to the terminal window
+            System.out.println("\nPress enter key to continue... ");
+            input.nextLine();
+            input.nextLine(); // Second read is required - bug in Scanner class
+
+            // Display the main menu again
+            option = displayMenu();
+        }
+
+        // The user chose option 0, so exit the program
+        System.out.println("Exiting System...bye... ");
+        System.out.println("Thank you for using our Weather Forecast App V1.0.");
+        System.exit(0);
     }
 
-    private int parseDayToNumber(String day) {
-        switch (day) {
-            case "Monday":
-                return 1;
-            case "Tuesday":
-                return 2;
-            case "Wednesday":
-                return 3;
-            case "Thursday":
-                return 4;
-            case "Friday":
-                return 5;
-            case "Saturday":
-                return 6;
-            case "Sunday":
-                return 7;
-            default:
-                return -1;
+    private void updateTemperature() {
+        input.nextLine(); // Bug fix
+        System.out.print("Enter Region : ");
+        String region = input.nextLine();
+        System.out.print("Enter Date (yyyy-MM-dd) : ");
+        String date = input.nextLine();
+        System.out.print("Enter New Temperature : ");
+        int temperature = input.nextInt();
+
+        boolean isChanged = weatherStore.updateTemperature(temperature, region, date);
+
+        if (isChanged) {
+            System.out.println("Update Successful... ");
+        } else {
+            System.out.println("Update NOT Successful... ");
         }
+    }
+
+    private void updateCondition() {
+        input.nextLine(); // Bug fix
+        System.out.print("Enter Region : ");
+        String region = input.nextLine();
+        System.out.print("Enter Date (yyyy-MM-dd) : ");
+        String date = input.nextLine();
+        System.out.print("Enter New Condition (Sunny or Rainy) : ");
+        String condition = input.nextLine();
+
+        boolean isChanged = weatherStore.updateCondition(condition, region, date);
+
+        if (isChanged) {
+            System.out.println("Update Successful... ");
+        } else {
+            System.out.println("Update NOT Successful... ");
+        }
+    }
+
+    private void getAdvice() {
+        System.out.println("///////////////////////////////////////");
+        System.out.println("Get Behavioral Advice");
+        System.out.println("///////////////////////////////////////");
+        input.nextLine(); // Required for bug in Scanner Class
+        System.out.print("Enter Region to Search for =>>");
+        String region = input.nextLine();
+        System.out.print("Enter Date (yyyy-MM-dd) to Search for =>>");
+        String date = input.nextLine();
+
+        String advice = weatherStore.getAdvice(region, date);
+        System.out.println(advice);
+    }
+
+    private void findWeatherForecast() {
+        System.out.println("///////////////////////////////////////");
+        System.out.println("Search Weather Forecast");
+        System.out.println("///////////////////////////////////////");
+        input.nextLine(); // Required for bug in Scanner Class
+        System.out.print("Enter Region to Search for =>>");
+        String region = input.nextLine();
+        System.out.print("Enter Date (yyyy-MM-dd) to Search for =>>");
+        String date = input.nextLine();
+
+        WeatherDay foundWeather = weatherStore.find(region, date);
+
+        if (foundWeather != null) {
+            System.out.println(foundWeather);
+        } else {
+            System.out.println("No Weather Forecast found for Region: " + region + " and Date: " + date);
+        }
+    }
+
+    private void addWeatherForecast() {
+        System.out.println("Please Enter Weather Forecast Details... ");
+
+        input.nextLine(); // Required for bug in Scanner Class
+        System.out.print("Enter Region : ");
+        String region = input.nextLine();
+        System.out.print("Enter Date (yyyy-MM-dd) : ");
+        String date = input.nextLine();
+        System.out.print("Enter Weather Condition(Sunny or Rainy) : ");
+        String WeatherCondition = input.nextLine();
+        System.out.print("Enter Temperature : ");
+        int temperature = input.nextInt();
+        input.nextLine(); // Extra read for bug in Scanner Class
+        System.out.print("Enter Day Name(From Monday to Sunday) : ");
+        String dayName = input.nextLine();
+        System.out.print("Enter Weather Description : ");
+        String weatherDescription = input.nextLine();
+
+        boolean isAdded = weatherStore.add(new WeatherDay(region, date, WeatherCondition, temperature, dayName, weatherDescription));
+        if (isAdded) {
+            System.out.println("Weather Forecast Added Successfully... ");
+        } else {
+            System.out.println("No Weather Forecast Added... ");
+        }
+    }
+
+    private void printWeatherForecasts() {
+        System.out.println();
+        System.out.println("///////////////////////");
+        System.out.println("////Weather Forecasts////");
+        System.out.println("///////////////////////");
+        System.out.println();
+        System.out.println(weatherStore.getListWeather());
+    }
+
+    public void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    public void setup() {
+        System.out.println("///////////////////////////////////////");
+        System.out.println("Weather Forecast App V1.0.");
+        System.out.println("///////////////////////////////////////");
+        System.out.println();
+        System.out.println();
+        System.out.println("Welcome to our Weather Forecast App V1.0.");
+        System.out.print("Please wait while the system loads...");
+        try {
+            System.out.print("...");
+            TimeUnit.SECONDS.sleep(1);
+            System.out.print("...");
+            TimeUnit.SECONDS.sleep(1);
+            System.out.print("...");
+            TimeUnit.SECONDS.sleep(1);
+            System.out.println("...");
+            System.out.println();
+        } catch (InterruptedException e) {
+            System.err.println("Thread was interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
+        }
+
+        weatherStore = new WeatherStore();
+    }
+
+    public void dummyData() {
+        WeatherDay w1 = new WeatherDay("Nanjing",
+                "2024-11-01",
+                "Sunny",
+                20,
+                "Monday",
+                "Wow! The day is so nice!");
+        weatherStore.add(w1);
+
+        WeatherDay w2 = new WeatherDay("Beijing",
+                "2024-11-02",
+                "Rainy",
+                15,
+                "Tuesday",
+                "Oh! It feels like it's raining cats and dogs!");
+        weatherStore.add(w2);
     }
 }
