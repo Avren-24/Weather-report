@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -59,16 +60,17 @@ public class WeatherApp {
         // The user chose option 0, so exit the program
         System.out.println("Exiting System...bye... ");
         System.out.println("Thank you for using our Weather Forecast App V1.0.");
+        System.out.println("The program ends at: " + getLocalDateTime());
         System.exit(0);
     }
 
     private void updateTemperature() {
         input.nextLine(); // Bug fix
-        System.out.print("Enter Region : ");
+        System.out.print("Enter Region: ");
         String region = input.nextLine();
-        System.out.print("Enter Date (yyyy-MM-dd) : ");
+        System.out.print("Enter Date (yyyy-MM-dd): ");
         String date = input.nextLine();
-        System.out.print("Enter New Temperature : ");
+        System.out.print("Enter New Temperature: ");
         int temperature = input.nextInt();
 
         boolean isChanged = weatherStore.updateTemperature(temperature, region, date);
@@ -82,11 +84,11 @@ public class WeatherApp {
 
     private void updateCondition() {
         input.nextLine(); // Bug fix
-        System.out.print("Enter Region : ");
+        System.out.print("Enter Region: ");
         String region = input.nextLine();
-        System.out.print("Enter Date (yyyy-MM-dd) : ");
+        System.out.print("Enter Date (yyyy-MM-dd): ");
         String date = input.nextLine();
-        System.out.print("Enter New Condition (Sunny or Rainy) : ");
+        System.out.print("Enter New Condition (Sunny or Rainy): ");
         String condition = input.nextLine();
 
         boolean isChanged = weatherStore.updateCondition(condition, region, date);
@@ -135,18 +137,18 @@ public class WeatherApp {
         System.out.println("Please Enter Weather Forecast Details... ");
 
         input.nextLine(); // Required for bug in Scanner Class
-        System.out.print("Enter Region : ");
+        System.out.print("Enter Region: ");
         String region = input.nextLine();
-        System.out.print("Enter Date (yyyy-MM-dd) : ");
+        System.out.print("Enter Date (yyyy-MM-dd): ");
         String date = input.nextLine();
-        System.out.print("Enter Weather Condition(Sunny or Rainy) : ");
+        System.out.print("Enter Weather Condition(Sunny or Rainy): ");
         String WeatherCondition = input.nextLine();
-        System.out.print("Enter Temperature : ");
+        System.out.print("Enter Temperature: ");
         int temperature = input.nextInt();
         input.nextLine(); // Extra read for bug in Scanner Class
-        System.out.print("Enter Day Name(From Monday to Sunday) : ");
+        System.out.print("Enter Day Name(From Monday to Sunday): ");
         String dayName = input.nextLine();
-        System.out.print("Enter Weather Description : ");
+        System.out.print("Enter Weather Description: ");
         String weatherDescription = input.nextLine();
 
         boolean isAdded = weatherStore.add(new WeatherDay(region, date, WeatherCondition, temperature, dayName, weatherDescription));
@@ -174,6 +176,8 @@ public class WeatherApp {
     public void setup() {
         System.out.println("///////////////////////////////////////");
         System.out.println("Weather Forecast App V1.0.");
+        System.out.println("Developed by: " + "FanXinkang and WangShuo.");
+        System.out.println("The program starts at: " + getLocalDateTime());
         System.out.println("///////////////////////////////////////");
         System.out.println();
         System.out.println();
@@ -192,8 +196,6 @@ public class WeatherApp {
             System.err.println("Thread was interrupted: " + e.getMessage());
             Thread.currentThread().interrupt();
         }
-
-        weatherStore = new WeatherStore();
     }
 
     public void dummyData() {
@@ -213,4 +215,9 @@ public class WeatherApp {
                 "Oh! It feels like it's raining cats and dogs!");
         weatherStore.add(w2);
     }
+
+    public LocalDateTime getLocalDateTime() {
+        return LocalDateTime.now();
+    }
 }
+// End of WeatherApp Class
