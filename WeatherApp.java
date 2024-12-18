@@ -1,3 +1,4 @@
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,16 +10,18 @@ import java.util.concurrent.TimeUnit;
 public class WeatherApp {
 
     private final WeatherStore weatherStore;
+
     public WeatherApp() {
         this.weatherStore = new WeatherStore();
     }
     Scanner input = new Scanner(System.in);
 
     public static void main(String[] args) {
-        WeatherApp WeatherApp = new WeatherApp();
-        WeatherApp.setup();
-        WeatherApp.clearScreen();
-        WeatherApp.runMenu();
+        WeatherApp weatherApp = new WeatherApp();
+        weatherApp.dummyData();
+        weatherApp.setup();
+        weatherApp.clearScreen();
+        weatherApp.runMenu();
     }
 
     private int displayMenu() {
@@ -282,23 +285,6 @@ public class WeatherApp {
         }
     }
 
-    public void dummyData() {
-        WeatherDay w1 = new WeatherDay("Nanjing",
-                "2024-11-01",
-                "Sunny",
-                20,
-                "Monday",
-                "Wow! The day is so nice!");
-        weatherStore.add(w1);
-
-        WeatherDay w2 = new WeatherDay("Beijing",
-                "2024-11-02",
-                "Rainy",
-                15,
-                "Tuesday",
-                "Oh! It feels like it's raining cats and dogs!");
-        weatherStore.add(w2);
-    }
 
     private void listWeatherForecastsByRegion() {
         input.nextLine(); // Required for bug in Scanner Class
@@ -336,6 +322,24 @@ public class WeatherApp {
 
     public LocalDateTime getLocalDateTime() {
         return LocalDateTime.now();
+    }
+
+    public void dummyData() {
+        WeatherDay w1 = new WeatherDay("Nanjing",
+                "2024-12-17",
+                "Sunny",
+                5,
+                "Tuesday",
+                "Wow! The day is so nice!");
+        weatherStore.add(w1);
+
+        WeatherDay w2 = new WeatherDay("Beijing",
+                "2024-12-18",
+                "Rainy",
+                3,
+                "Wednesday",
+                "Oh! It feels like it's raining cats and dogs!");
+        weatherStore.add(w2);
     }
 }
 // End of WeatherApp Class
