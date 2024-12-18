@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class WeatherStore {
     private final ArrayList<WeatherDay> weatherList = new ArrayList<>();
@@ -50,12 +53,8 @@ public class WeatherStore {
         return false;
     }
 
-    public boolean delete(String region, String date) {
-        WeatherDay w = find(region, date);
-        if (w != null) {
-            return weatherList.remove(w);
-        }
-        return false;
+    public boolean remove(String region, String date) {
+        return weatherList.removeIf(weatherDay -> weatherDay.getRegion().equals(region) && weatherDay.getDate().equals(date));
     }
 
     public String getAdvice(String region, String date) {
@@ -74,4 +73,28 @@ public class WeatherStore {
             return "No weather data available for the given region and date.";
         }
     }
+
+    public List<WeatherDay> findByRegion(String region) {
+        List<WeatherDay> filteredList = new ArrayList<>();
+        for (WeatherDay w : weatherList) {
+            if (w.getRegion().equalsIgnoreCase(region)) {
+                filteredList.add(w);
+            }
+        }
+        filteredList.sort(Comparator.comparing(WeatherDay::getDate));
+        return filteredList;
+    }
+
+    public List<WeatherDay> listByRegion(String region) {
+        return findByRegion(region);
+    }
+
+    public List<WeatherDay> listByDate(String date) {
+        // 实现根据日期获取所有天气记录的逻辑
+        // 例如：
+        return weatherList.stream()
+                .filter(weatherDay -> weatherDay.getDate().equals(date))
+                .collect(Collectors.toList());
+    }
 }
+// End of WeatherStore Class

@@ -15,7 +15,6 @@ public class WeatherDay {
         this.weatherDescription = weatherDescription;
     }
 
-    // Getters and Setters
     public String getRegion() {
         return region;
     }
@@ -69,3 +68,4 @@ public class WeatherDay {
         return "Region: " + region + ", Date: " + date + ", Condition: " + weatherCondition + ", Temperature: " + temperature + "°C, Day Name: " + dayName + ", WeatherDescription: " + weatherDescription;
     }
 }
+// End of WeatherDay Class
