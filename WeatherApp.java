@@ -1,11 +1,10 @@
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class WeatherApp {
 
@@ -18,7 +17,6 @@ public class WeatherApp {
 
     public static void main(String[] args) {
         WeatherApp weatherApp = new WeatherApp();
-        weatherApp.dummyData();
         weatherApp.setup();
         weatherApp.clearScreen();
         weatherApp.runMenu();
@@ -26,23 +24,24 @@ public class WeatherApp {
 
     private int displayMenu() {
         clearScreen(); // Only works at console
-        Colour.printlnRandomColor("/////////////////////////");
+        shortSlash();
         Colour.printlnRandomColor("""
-       Weather Forecast Menu
-       ---------------------
-          1) Add a Weather Forecast
-          2) Update Weather Condition
-          3) Update Temperature
-          4) Delete Weather Forecast
-          5) Search for Weather Forecast (Region and Date)
-          6) List Weather Forecasts by Region
-          7) List Weather Forecasts by Date
-          8) List All Weather Forecasts
-          9) Get Behavioral Advice
-          0) Exit
-       ==>>""");
+      *********************************************************
+      *                Weather Forecast Menu                  *
+      *    1) Add a Weather Forecast                          *
+      *    2) Update Weather Condition                        *
+      *    3) Update Temperature                              *
+      *    4) Delete Weather Forecast                         *
+      *    5) Search for Weather Forecast (Region and Date)   *
+      *    6) List Weather Forecasts by Region                *
+      *    7) List Weather Forecasts by Date                  *
+      *    8) List All Weather Forecasts                      *
+      *    9) Get Behavioral Advice                           *
+      *    0) Exit                                            *
+      *********************************************************
+    ==>>""");
         int option = input.nextInt();
-        Colour.printlnRandomColor("/////////////////////////");
+        longSlash();
         return option;
     }
 
@@ -133,9 +132,9 @@ public class WeatherApp {
     }
 
     private void getAdvice() {
-        Colour.printlnRandomColor("///////////////////////////////////////");
+        longSlash();
         Colour.printlnRandomColor("Get Behavioral Advice");
-        Colour.printlnRandomColor("///////////////////////////////////////");
+        longSlash();
         input.nextLine(); // Required for bug in Scanner Class
         Colour.printlnRandomColor("Enter Region to Search for =>>");
         String region = input.nextLine();
@@ -147,9 +146,9 @@ public class WeatherApp {
     }
 
     private void findWeatherForecast() {
-        Colour.printlnRandomColor("///////////////////////////////////////");
+        longSlash();
         Colour.printlnRandomColor("Search Weather Forecast");
-        Colour.printlnRandomColor("///////////////////////////////////////");
+        longSlash();
         input.nextLine(); // Required for bug in Scanner Class
         Colour.printlnRandomColor("Enter Region to Search for =>>");
         String region = input.nextLine();
@@ -248,9 +247,9 @@ public class WeatherApp {
 
     private void printWeatherForecasts() {
         Colour.printlnRandomColor("");
-        Colour.printlnRandomColor("///////////////////////");
+        shortSlash();
         Colour.printlnRandomColor("////Weather Forecasts////");
-        Colour.printlnRandomColor("///////////////////////");
+        shortSlash();
         Colour.printlnRandomColor("");
         Colour.printlnRandomColor(String.valueOf(weatherStore.getListWeather()));
     }
@@ -261,23 +260,20 @@ public class WeatherApp {
     }
 
     public void setup() {
-        Colour.printlnRandomColor("///////////////////////////////////////");
+        longSlash();
         Colour.printlnRandomColor("Weather Forecast App V1.0.");
         Colour.printlnRandomColor("Developed by: " + "FanXinkang and WangShuo.");
         Colour.printlnRandomColor("The program starts at: " + getLocalDateTime());
-        Colour.printlnRandomColor("///////////////////////////////////////");
+        longSlash();
         Colour.printlnRandomColor("");
         Colour.printlnRandomColor("");
         Colour.printlnRandomColor("Welcome to our Weather Forecast App V1.0.");
         Colour.printRandomColor("Please wait while the system loads");
         try {
-            Colour.printRandomColor("...");
-            TimeUnit.SECONDS.sleep(1);
-            Colour.printRandomColor("...");
-            TimeUnit.SECONDS.sleep(1);
-            Colour.printRandomColor("...");
-            TimeUnit.SECONDS.sleep(1);
-            Colour.printRandomColor("...");
+            for (int i = 0; i < 10; i++) {
+                Colour.printRandomColor(".");
+                TimeUnit.MILLISECONDS.sleep(300);
+            }
             Colour.printRandomColor("");
         } catch (InterruptedException e) {
             System.err.println("Thread was interrupted: " + e.getMessage());
@@ -285,9 +281,8 @@ public class WeatherApp {
         }
     }
 
-
     private void listWeatherForecastsByRegion() {
-        input.nextLine(); // Required for bug in Scanner Class
+        input.nextLine();
         Colour.printlnRandomColor("Enter Region to List Weather Forecasts: ");
         String region = input.nextLine();
 
@@ -304,7 +299,7 @@ public class WeatherApp {
     }
 
     private void listWeatherForecastsByDate() {
-        input.nextLine(); // Required for bug in Scanner Class
+        input.nextLine();
         Colour.printlnRandomColor("Enter Date (yyyy-MM-dd) to List Weather Forecasts: ");
         String date = input.nextLine();
 
@@ -320,8 +315,22 @@ public class WeatherApp {
         }
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return LocalDateTime.now();
+    public static void shortSlash() {
+        for (int i = 0; i < 24; i++){
+            Colour.printRandomColor("/");
+        }
+        Colour.printlnRandomColor("/");
+    }
+
+    public static void longSlash() {
+        for (int i = 0; i < 44; i++){
+            Colour.printRandomColor("/");
+        }
+        Colour.printlnRandomColor("/");
+    }
+
+    public String getLocalDateTime() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public void dummyData() {
