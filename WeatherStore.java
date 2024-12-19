@@ -90,8 +90,6 @@ public class WeatherStore {
     }
 
     public List<WeatherDay> listByDate(String date) {
-        // 实现根据日期获取所有天气记录的逻辑
-        // 例如：
         return weatherList.stream()
                 .filter(weatherDay -> weatherDay.getDate().equals(date))
                 .collect(Collectors.toList());
