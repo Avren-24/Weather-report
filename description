@@ -1,12 +1,13 @@
 /**
  *First of all, thank you for using the Weather App we designed. Please review our teamwork.
- *Our group has designed a weather forecasting system with many functions, such as deleting and changing the weather, adding the weather, and suggesting behavior based on specific weather, etc.
+ *Our group has designed a weather forecasting system with many functions, as follows.
  *When you run this program, what comes to your eye is the directory menu.
- *Like your Vehicle App, you need to add the weather at the specified time and place according to the instructions, and the records you add will be stored for subsequent deletion or query.
- *Next, you can choose whether to delete the original weather or add a new one according to your needs.
- *You can also update the temperature of the weather you have entered.
- *Moreover, You can enter a weather you added to get the schedule recommended by the system.
- *Then, when you no longer need to edit the weather, you can select option 1) to list the final weather record.
+ *Like your Vehicle App, you need to add the weather data at the specified time and place according to the instructions
+ *The records you add will be stored for subsequent revision, deletion or query.
+ *You can choose whether to revise, delete the original weather data or add a new one according to your needs.
+ *Moreover, you can check all the weather at a specific time or in a specific region.
+ *In addition, you can also list all the final weather you have entered so far.
+ *What's more, you can enter a specific region and time, and you will receive a recommendation for behavior according to the weather data of the day.
  *The above is the whole content of our Weather App.
  */
 
@@ -15,5 +16,10 @@
  *If you are willing, we will modify and improve our App in time.
  *Thank you again for using our Weather App. We wish you all the best in your work and a happy life.
  */
+
+ /**
+  *Reference Books: Java from Basics to Proficiency.
+  *Reference website: local time conversion and color conversion library.
+  */
 
  //Written by FanXinkang and WangShuo.
