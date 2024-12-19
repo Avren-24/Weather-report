@@ -4,7 +4,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class WeatherApp {
 
@@ -23,8 +22,24 @@ public class WeatherApp {
     }
 
     private int displayMenu() {
-        clearScreen(); // Only works at console
-        shortSlash();
+        clearScreen();
+        hugeSlash();
+
+        Colour.printRandomColorForPattern("***************        ***************        ***************        ***************        ***************");
+        Colour.printRandomColorForPattern("***************        ***************        ***************        ***************        ***************");
+        Colour.printRandomColorForPattern("***                          ***              ***         ***        ***         ***              ***");
+        Colour.printRandomColorForPattern("***                          ***              ***         ***        ***         ***              ***");
+        Colour.printRandomColorForPattern("***                          ***              ***         ***        ***         ***              ***");
+        Colour.printRandomColorForPattern("***************              ***              ***************        ***************              ***");
+        Colour.printRandomColorForPattern("***************              ***              ***************        ***************              ***");
+        Colour.printRandomColorForPattern("            ***              ***              ***         ***        *******                      ***");
+        Colour.printRandomColorForPattern("            ***              ***              ***         ***        ***  ****                    ***");
+        Colour.printRandomColorForPattern("            ***              ***              ***         ***        ***    ****                  ***");
+        Colour.printRandomColorForPattern("***************              ***              ***         ***        ***      ****                ***");
+        Colour.printRandomColorForPattern("***************              ***              ***         ***        ***        ****              ***");
+
+        hugeSlash();
+
         Colour.printlnRandomColor("""
       *********************************************************
       *                Weather Forecast Menu                  *
@@ -63,16 +78,13 @@ public class WeatherApp {
                 default -> Colour.printlnRandomColor("Invalid option entered: " + option);
             }
 
-            // Pause the program so that the user can read what we just printed to the terminal window
             Colour.printlnRandomColor("\nPress enter key to continue... ");
             input.nextLine();
-            input.nextLine(); // Second read is required - bug in Scanner class
+            input.nextLine();
 
-            // Display the main menu again
             option = displayMenu();
         }
 
-        // The user chose option 0, so exit the program
         Colour.printlnRandomColor("Exiting System...bye... ");
         Colour.printlnRandomColor("Thank you for using our Weather Forecast App V1.0.");
         Colour.printlnRandomColor("The program ends at: " + getLocalDateTime());
@@ -80,7 +92,7 @@ public class WeatherApp {
     }
 
     private void deleteWeatherForecast() {
-        input.nextLine(); // Required for bug in Scanner Class
+        input.nextLine();
         Colour.printlnRandomColor("Enter Region: ");
         String region = input.nextLine();
         Colour.printlnRandomColor("Enter Date (yyyy-MM-dd): ");
@@ -96,7 +108,7 @@ public class WeatherApp {
     }
 
     private void updateTemperature() {
-        input.nextLine(); // Bug fix
+        input.nextLine();
         Colour.printlnRandomColor("Enter Region: ");
         String region = input.nextLine();
         Colour.printlnRandomColor("Enter Date (yyyy-MM-dd): ");
@@ -114,7 +126,7 @@ public class WeatherApp {
     }
 
     private void updateCondition() {
-        input.nextLine(); // Bug fix
+        input.nextLine();
         Colour.printlnRandomColor("Enter Region: ");
         String region = input.nextLine();
         Colour.printlnRandomColor("Enter Date (yyyy-MM-dd): ");
@@ -132,10 +144,9 @@ public class WeatherApp {
     }
 
     private void getAdvice() {
-        longSlash();
         Colour.printlnRandomColor("Get Behavioral Advice");
         longSlash();
-        input.nextLine(); // Required for bug in Scanner Class
+        input.nextLine();
         Colour.printlnRandomColor("Enter Region to Search for =>>");
         String region = input.nextLine();
         Colour.printlnRandomColor("Enter Date (yyyy-MM-dd) to Search for =>>");
@@ -146,10 +157,9 @@ public class WeatherApp {
     }
 
     private void findWeatherForecast() {
-        longSlash();
         Colour.printlnRandomColor("Search Weather Forecast");
         longSlash();
-        input.nextLine(); // Required for bug in Scanner Class
+        input.nextLine();
         Colour.printlnRandomColor("Enter Region to Search for =>>");
         String region = input.nextLine();
         Colour.printlnRandomColor("Enter Date (yyyy-MM-dd) to Search for =>>");
@@ -167,13 +177,12 @@ public class WeatherApp {
     private void addWeatherForecast() {
         Colour.printlnRandomColor("Please Enter Weather Forecast Details... ");
 
-        input.nextLine(); // Required for bug in Scanner Class
+        input.nextLine();
         Colour.printlnRandomColor("Enter Region: ");
         String region = input.nextLine();
         Colour.printlnRandomColor("Enter Date (yyyy-MM-dd): ");
         String date = input.nextLine();
 
-        // Validate date format and actual date
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate parsedDate = null;
         while (parsedDate == null) {
@@ -182,18 +191,16 @@ public class WeatherApp {
             } catch (DateTimeParseException e) {
                 Colour.printlnRandomColor("Error: Invalid Date Format. Please enter the date in yyyy-MM-dd format: ");
                 date = input.nextLine();
-                continue; // Skip further checks if format is incorrect
+                continue;
             }
 
-            // Check if the parsed date is valid
             if (parsedDate.isBefore(LocalDate.MIN) || parsedDate.isAfter(LocalDate.MAX)) {
                 Colour.printlnRandomColor("Error: Date is out of range. Please enter a valid date: ");
                 date = input.nextLine();
-                parsedDate = null; // Reset parsedDate to null to re-enter the loop
+                parsedDate = null;
             }
         }
 
-        // Validate day name
         String dayName = parsedDate.getDayOfWeek().toString();
         String userInputDayName = "";
         while (!dayName.equalsIgnoreCase(userInputDayName)) {
@@ -201,7 +208,6 @@ public class WeatherApp {
             userInputDayName = input.nextLine();
 
             if (!dayName.equalsIgnoreCase(userInputDayName)) {
-                // Modify the error message to capitalize the first letter of the day name
                 String capitalizedDayName = dayName.substring(0, 1).toUpperCase() + dayName.substring(1).toLowerCase();
                 Colour.printlnRandomColor("Error: The day name does not match the date. Please enter a valid day (" + capitalizedDayName + "): ");
             }
@@ -210,28 +216,25 @@ public class WeatherApp {
         Colour.printlnRandomColor("Enter Weather Condition(Sunny or Rainy): ");
         String weatherCondition = input.nextLine();
 
-        // Validate weather condition
         while (!weatherCondition.equals("Sunny") && !weatherCondition.equals("Rainy")) {
             Colour.printlnRandomColor("Error: Invalid Weather Condition. Please enter 'Sunny' or 'Rainy': ");
             weatherCondition = input.nextLine();
         }
 
-        // Validate temperature
         Colour.printlnRandomColor("Enter Temperature (°C): ");
         int temperature = input.nextInt();
-        input.nextLine(); // Extra read for bug in Scanner Class
+        input.nextLine();
 
         while (temperature < -50 || temperature > 50) {
             Colour.printlnRandomColor("Error: Invalid Weather Temperature. Please enter a valid temperature between -50°C and 50°C: ");
             temperature = input.nextInt();
-            input.nextLine(); // Extra read for bug in Scanner Class
+            input.nextLine();
         }
 
         Colour.printlnRandomColor("Enter Weather Description: ");
         String weatherDescription = input.nextLine();
 
         WeatherDay newWeatherDay = new WeatherDay(region, date, weatherCondition, temperature, dayName, weatherDescription);
-        // Check if the weather forecast already exists
         WeatherDay existingWeatherDay = weatherStore.find(region, date);
         if (existingWeatherDay != null && existingWeatherDay.getRegion().equals(region) && existingWeatherDay.getDate().equals(date)) {
             Colour.printlnRandomColor("Error: Weather Forecast Already Exists... ");
@@ -324,6 +327,13 @@ public class WeatherApp {
 
     public static void longSlash() {
         for (int i = 0; i < 44; i++){
+            Colour.printRandomColor("/");
+        }
+        Colour.printlnRandomColor("/");
+    }
+
+    public static void hugeSlash() {
+        for (int i = 0; i < 109; i++){
             Colour.printRandomColor("/");
         }
         Colour.printlnRandomColor("/");
